@@ -32,11 +32,73 @@ class Tests_Model(TestCase):
             "email": 'email@test.com',
             'password': 'password1234'
         }
-
-        with self.assertRaises(ValueError):
+        with self.assertRaises(ValueError) as context:
             get_user_model().objects.create_user(
                 email=playload['email'],
                 password=playload['password'],
                 username=''
             )
+        self.assertEqual(str(context.exception), 'The given username must be set')
+    
 
+
+    def test_create_superuser_undefine_username(self):
+        """ทดสอบการสร้าง superuser โดยไม่กำหนด username"""
+        playload = {
+            'email':'email@test.com',
+            'password':'password1234',
+            'username':''
+        }
+   
+        with self.assertRaises(ValueError) as context:
+            get_user_model().objects.create_superuser(
+                email=playload['email'],
+                password=playload['password'],
+                username=playload['username']
+            )
+        self.assertEqual(str(context.exception), "The given username must be set")
+
+
+
+
+    def test_create_superuser_success(self):
+        """ ทดสอบ ฟังก์ชัน create_superuser สมัครแอดมิน"""
+        playload = {
+            'email':'email@test.com',
+            'username':'admin',
+            'password':'password1234'
+        }
+
+        superuser = get_user_model().objects.create_superuser(
+            email=playload['email'],
+            username=playload['username'],
+            password=playload['password']
+        )
+        self.assertEqual(str(superuser), playload['username'])
+        self.assertTrue(superuser.is_staff)
+        self.assertTrue(superuser.is_superuser)
+
+
+    def test_create_superuser_without_is_staff_raises_error(self):
+        """ทดสอบการสร้าง superuser โดยไม่มี is_staff จะ raise error"""
+        with self.assertRaises(ValueError) as context:
+            get_user_model().objects.create_superuser(
+                email='superuser@test.com',
+                password='superuserpass',
+                username='namesuperuser',
+                is_staff=False
+            )
+        self.assertEqual(str(context.exception), 'Superuser must have is_staff=True.')
+
+
+
+    def test_create_superuser_without_is_superuser_raises_error(self):
+        """ทดสอบการสร้าง superuser โดยไม่มี is_superuser จะ raise error"""
+        with self.assertRaises(ValueError) as context:
+            get_user_model().objects.create_superuser(
+                email='superuser@test.com',
+                password='superuserpass',
+                username='namesuperuser',
+                is_superuser=False
+            )
+        self.assertEqual(str(context.exception), 'Superuser must have is_superuser=True.')
