@@ -30,13 +30,8 @@ class UserSerializer(serializers.ModelSerializer):
         if password:
             user.set_password(password)
             user.save()
-        
         return user
 
-
-from rest_framework import serializers
-from django.contrib.auth import authenticate
-from django.utils.translation import gettext_lazy as _
 
 class AuthTokenSerializers(serializers.Serializer):
     username = serializers.CharField(max_length=255)
