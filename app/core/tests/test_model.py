@@ -38,7 +38,7 @@ class Tests_Model(TestCase):
                 password=playload['password'],
                 username=''
             )
-        self.assertEqual(str(context.exception), 'The given username must be set')
+        self.assertEqual(str(context.exception), 'โปรดกำหนด Username')
     
 
 
@@ -56,9 +56,7 @@ class Tests_Model(TestCase):
                 password=playload['password'],
                 username=playload['username']
             )
-        self.assertEqual(str(context.exception), "The given username must be set")
-
-
+        self.assertEqual(str(context.exception), "โปรดกำหนด Username")
 
 
     def test_create_superuser_success(self):
@@ -88,7 +86,7 @@ class Tests_Model(TestCase):
                 username='namesuperuser',
                 is_staff=False
             )
-        self.assertEqual(str(context.exception), 'Superuser must have is_staff=True.')
+        self.assertEqual(str(context.exception), 'Superuser ต้องมี is_staff=True')
 
 
 
@@ -101,4 +99,4 @@ class Tests_Model(TestCase):
                 username='namesuperuser',
                 is_superuser=False
             )
-        self.assertEqual(str(context.exception), 'Superuser must have is_superuser=True.')
+        self.assertEqual(str(context.exception), 'Superuser ต้องมี is_superuser=True')
